@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">sample</string>
+    <string name="permission_previously_denied">Please enable Storage Permission to use application</string>
+    <string name="permission_disabled">Please enable Storage Permission from setting to use application</string>
+    <string name="upload">Upload</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="permission_required">Storage Permission is required</string>
+    <string name="notification_message">Uploading in progress</string>
+    <string name="notification_title">Upload</string>
+    <string name="upload_complete">Upload completed</string>
+    <string name="no_internet_message">Please connect to internet to upload</string>
+</resources>
