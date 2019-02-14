@@ -139,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
     protected void onStart() {
         super.onStart();
 
-        EventBus.getDefault().register(context);
+        if(!EventBus.getDefault().isRegistered(context)) {
+
+            EventBus.getDefault().register(context);
+        }
     }
 
     @Override
@@ -364,6 +367,9 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
         if(!videoModelLinkedList.isEmpty()) {
 
             VideoModelEntity videoModelEntity = videoModelLinkedList.remove();
+
+            if(!videoModelEntity.getStatus().equalsIgnoreCase(AppConstants.VIDEO_UPLOAD_STATUS_SUCCESS)){
+
             videoModelEntity.setStatus(AppConstants.VIDEO_UPLOAD_STATUS_UPLOADING);
 
             VideoViewModel videoViewModel = ViewModelProviders.of(context).get(VideoViewModel.class);
@@ -389,6 +395,11 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
             }else {
 
                 Toast.makeText(context,getResources().getString(R.string.error_message),Toast.LENGTH_SHORT).show();
+                }
+
+            }else {
+
+                LogHelper.log(TAG,"initiateUpload() Video already uploaded === "+videoModelEntity.getId() + ","+videoModelEntity.getFilePath());
             }
 
         }else {
@@ -407,6 +418,6 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
     protected void onStop() {
         super.onStop();
 
-        EventBus.getDefault().unregister(context);
+//        EventBus.getDefault().unregister(context);
     }
 }

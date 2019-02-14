@@ -16,8 +16,9 @@ import java.util.List;
 
      private static final String TAG = InsertAsyncTask.class.getSimpleName();
      private final VideoDao mAsynctaskDao;
+     private boolean isInsertionSuccess;
 
-    public InsertAsyncTask(VideoDao dao){
+     public InsertAsyncTask(VideoDao dao){
 
         mAsynctaskDao = dao;
     }
@@ -37,10 +38,16 @@ import java.util.List;
 
                     LogHelper.log(TAG, "List item - Inserted Row Id === " + insertedRowIdArray[i]);
 
-                    if (insertedRowIdArray.length == dataList.size() && insertedRowIdArray[i] >=0 ) {
+                    if(insertedRowIdArray[i] != null && insertedRowIdArray[i] >= 0){
 
-                        return AppConstants.DATABASE_INSERTION_SUCCESS;
+                        isInsertionSuccess = true;
                     }
+
+                }
+
+                if (insertedRowIdArray.length == dataList.size() && isInsertionSuccess) {
+
+                    return AppConstants.DATABASE_INSERTION_SUCCESS;
                 }
 
             }
