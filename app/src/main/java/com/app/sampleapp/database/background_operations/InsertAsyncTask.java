@@ -36,19 +36,20 @@ import java.util.List;
                 for (int i = 0; i < insertedRowIdArray.length; i++) {
 
                     LogHelper.log(TAG, "List item - Inserted Row Id === " + insertedRowIdArray[i]);
+
+                    if (insertedRowIdArray.length == dataList.size() && insertedRowIdArray[i] >=0 ) {
+
+                        return AppConstants.DATABASE_INSERTION_SUCCESS;
+                    }
                 }
 
-                if (insertedRowIdArray.length == dataList.size()) {
-
-                    return AppConstants.DATABASE_INSERTION_SUCCESS;
-                }
             }
 
         }else{
 
             Long insertedRowId = mAsynctaskDao.insertVideoModel((VideoModelEntity) params[0]);
 
-            if(insertedRowId != null && insertedRowId > 0){
+            if(insertedRowId != null && insertedRowId >= 0){
 
                 LogHelper.log(TAG, "Single Item - Inserted Row Id === " + insertedRowId);
 

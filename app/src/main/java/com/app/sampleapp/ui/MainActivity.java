@@ -100,10 +100,18 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
                     if (videoModelEntities != null && !videoModelEntities.isEmpty()) {
 
+                        videoModelLinkedList.clear();
+
+                        for (VideoModelEntity videoModel :
+                                videoModelEntities) {
+
+                            if(!videoModel.getStatus().equalsIgnoreCase(AppConstants.VIDEO_UPLOAD_STATUS_UPLOADING)){
+
+                                videoModelLinkedList.add(videoModel);
+                            }
+                        }
                         updateAdapter(videoModelEntities);
 
-                        videoModelLinkedList.clear();
-                        videoModelLinkedList.addAll(videoModelEntities);
 
                     }
 
@@ -112,7 +120,16 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
         }else {
 
             videoModelLinkedList.clear();
-            videoModelLinkedList.addAll(videoModelEntityList);
+
+            for (VideoModelEntity videoModel :
+                    videoModelEntityList) {
+
+                if(!videoModel.getStatus().equalsIgnoreCase(AppConstants.VIDEO_UPLOAD_STATUS_UPLOADING)){
+
+                    videoModelLinkedList.add(videoModel);
+                }
+            }
+
             updateAdapter(videoViewModel.getVideoModelList());
 
         }
@@ -167,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
                     videoModelEntityList.add(videoModelEntity);
                 }
 
-//                videoViewModel.deleteAllVideoModels();
+                videoViewModel.deleteAllVideoModels();
                 videoViewModel.insertVideoModel(videoModelEntityList);
             }
 
@@ -349,23 +366,29 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
             VideoModelEntity videoModelEntity = videoModelLinkedList.remove();
             videoModelEntity.setStatus(AppConstants.VIDEO_UPLOAD_STATUS_UPLOADING);
 
-//            VideoViewModel videoViewModel = ViewModelProviders.of(context).get(VideoViewModel.class);
-//            videoViewModel.insertVideoModel(videoModelEntity);
+            VideoViewModel videoViewModel = ViewModelProviders.of(context).get(VideoViewModel.class);
+            videoViewModel.insertVideoModel(videoModelEntity);
 
             videoAdapter.updateVideoUploadStatus(videoModelEntity);
 
-            Intent intent = new Intent(context, VideoUploadService.class);
+            if(videoModelEntity.getFilePath() !=null && !videoModelEntity.getFilePath().isEmpty()) {
+
+                Intent intent = new Intent(context, VideoUploadService.class);
 //        intent.putExtra(AppConstants.FILE_PATH,"/storage/emulated/0/DCIM/Camera/VID_20190214_232124.mp4");
-            intent.putExtra(AppConstants.FILE_PATH, videoModelEntity.getFilePath());
-            intent.putExtra(AppConstants.VIDEO_MODEL_ID,videoModelEntity.getId());
+                intent.putExtra(AppConstants.FILE_PATH, videoModelEntity.getFilePath());
+                intent.putExtra(AppConstants.VIDEO_MODEL_ID, videoModelEntity.getId());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                startForegroundService(intent);
+                    startForegroundService(intent);
 
-            } else {
+                } else {
 
-                startService(intent);
+                    startService(intent);
+                }
+            }else {
+
+                Toast.makeText(context,getResources().getString(R.string.error_message),Toast.LENGTH_SHORT).show();
             }
 
         }else {

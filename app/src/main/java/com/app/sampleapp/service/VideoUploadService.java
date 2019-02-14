@@ -98,7 +98,7 @@ public class VideoUploadService extends Service {
 
     public void uploadVideo(Intent intent) {
 
-        String filePath = intent.getStringExtra(AppConstants.FILE_PATH);
+        final String filePath = intent.getStringExtra(AppConstants.FILE_PATH);
 
         final int videoModelId = intent.getIntExtra(AppConstants.VIDEO_MODEL_ID,-1);
 
@@ -123,6 +123,7 @@ public class VideoUploadService extends Service {
 
                 if(response.isSuccessful()) {
 
+                    videoModel.setFilePath(filePath);
                     videoModel.setStatus(AppConstants.VIDEO_UPLOAD_STATUS_SUCCESS);
                     videoModel.setId(videoModelId);
 
@@ -130,6 +131,7 @@ public class VideoUploadService extends Service {
 
                 }else {
 
+                    videoModel.setFilePath(filePath);
                     videoModel.setStatus(AppConstants.VIDEO_UPLOAD_STATUS_FAILED);
                     videoModel.setId(videoModelId);
 
@@ -146,6 +148,7 @@ public class VideoUploadService extends Service {
                 LogHelper.log(TAG,"onFailure === ");
 
                 VideoModelEntity videoModel = new VideoModelEntity();
+                videoModel.setFilePath(filePath);
                 videoModel.setStatus(AppConstants.VIDEO_UPLOAD_STATUS_FAILED);
                 videoModel.setId(videoModelId);
 
