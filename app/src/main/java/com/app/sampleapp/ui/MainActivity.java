@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
     private VideoAdapter videoAdapter;
     private Button uploadButton;
     final LinkedList<VideoModelEntity> videoModelLinkedList = new LinkedList<>();
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
       PermissionUtils.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE, context);
 
+      handler = new Handler();
     }
 
     private void initViews() {
@@ -189,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
                 videoViewModel.deleteAllVideoModels();
                 videoViewModel.insertVideoModel(videoModelEntityList);
+
+                uploadButton.setEnabled(true);
+
             }
 
         }else{
@@ -257,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
                     videosModelListLiveData.removeObserver(this);
 
                     if(videoModelEntities != null && !videoModelEntities.isEmpty()) {
+
                         updateAdapter(videoModelEntities);
                         videoViewModel.setVideoModelList(videoModelEntities);
                     }
@@ -304,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
             videoAdapter.setData(videoModelEntities);
             videoAdapter.notifyDataSetChanged();
-            uploadButton.setEnabled(true);
 
         }else {
 
@@ -341,10 +347,8 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
                             initiateUpload();
 
-                        } else {
-
-                            uploadButton.setEnabled(true);
                         }
+
 
                     }
                 });
@@ -366,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
         if(!videoModelLinkedList.isEmpty()) {
 
-            VideoModelEntity videoModelEntity = videoModelLinkedList.remove();
+            final VideoModelEntity videoModelEntity = videoModelLinkedList.remove();
 
             if(!videoModelEntity.getStatus().equalsIgnoreCase(AppConstants.VIDEO_UPLOAD_STATUS_SUCCESS)){
 
@@ -399,7 +403,17 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
 
             }else {
 
+                Toast.makeText(context,getResources().getString(R.string.video_already_uploaded) +
+                        " Path: " +videoModelEntity.getFilePath(),Toast.LENGTH_LONG).show();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        initiateUpload();
+                    }
+                },200);
                 LogHelper.log(TAG,"initiateUpload() Video already uploaded === "+videoModelEntity.getId() + ","+videoModelEntity.getFilePath());
+
             }
 
         }else {
@@ -417,7 +431,10 @@ public class MainActivity extends AppCompatActivity implements PermissionUtils.P
     @Override
     protected void onStop() {
         super.onStop();
+        if(handler != null){
 
+            handler.removeCallbacksAndMessages(null);
+        }
 //        EventBus.getDefault().unregister(context);
     }
 }

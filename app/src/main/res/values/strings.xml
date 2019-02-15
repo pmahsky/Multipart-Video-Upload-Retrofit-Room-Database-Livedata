@@ -11,4 +11,5 @@
     <string name="upload_complete">Upload completed</string>
     <string name="no_internet_message">Please connect to internet to upload</string>
     <string name="error_message">An error has occurred.</string>
+    <string name="video_already_uploaded">Video uploaded</string>
 </resources>
