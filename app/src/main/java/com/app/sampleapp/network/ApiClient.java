@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://assignment.trell.co";
+    private static final String BASE_URL = ""; //Add url with multipart support for uploading video without slash at end. eg. https://www.abc.com
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient(){

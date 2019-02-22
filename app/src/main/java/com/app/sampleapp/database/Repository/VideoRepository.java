@@ -13,6 +13,8 @@ import java.util.List;
 
 public class VideoRepository {
 
+    //Similar to Proxy Design Pattern, where data source need not to be known by accessing client
+
     private VideoDao mVideoDao;
     static final String TAG = VideoRepository.class.getSimpleName();
 
