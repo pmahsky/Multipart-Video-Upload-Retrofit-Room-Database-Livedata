@@ -13,5 +13,6 @@ A sample project depicting use of following Android Components -
 
 
 Its a simple app that provides a utility to import multiple videos from phone gallery, present them in a list with path and upload status.
-Videos then can be uploaded sequentially, maintaining the upload status to a server having Multipart support. The task will be continued even 
-if user has closed the app.
+Videos then can be uploaded sequentially, maintaining the upload status to a server having Multipart support. The task will be continued even if user has closed the app.
+
+Note - The BASE_URL is purposely kept empty in Retrofit Client. You can use your server url if it has Multipart Upload support.
